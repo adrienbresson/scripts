@@ -1,0 +1,161 @@
+=== RASPBMC ===
+
+## This is my install log for XBMC on my RASPBERRY user RASPBMC
+## Date : 20121215
+
+http://michael.gorven.za.net/blog/2012/08/06/xbmc-packages-raspberry-pi-running-raspbian
+http://www.raspbian.org/RaspbianXBMC
+
+vi /etc/apt/sources.list.d/mene.list
+deb http://archive.mene.za.net/raspbian wheezy contrib
+
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key 5243CDED
+
+sudo aptitude update
+sudo aptitude install xbmc
+
+sudo vi /etc/group
+  audio video input dialout plugdev
+
+vi /etc/apt/sources.list.d/raspi.list 
+  deb http://archive.raspberrypi.org/debian/ wheezy main untested
+
+sudo apt-get update && sudo apt-get dist-upgrade
+
+
+=== Backup && restore ===
+
+==== From stick to stick ====
+sudo dd bs=1M if=/dev/sde of=/dev/sdg
+
+==== From stick to file ====
+sudo dd bs=1M if=/dev/sde of=/home/ab/Bureau/raspbian_20120830.img
+
+==== Fom file to stick ===
+sudo dd bs=1M if=/home/ab/Bureau/raspbian_20120830.img of=/dev/sde
+
+==== DD over SSH ====
+dd if=/dev/mmcblk0p | ssh ab@192.168.1.129 "dd of=/home/adrien/Bureau/backupfile.iso"
+
+==== FROM stick to file gzip ===
+sudo dd if=/dev/sde | gzip > /home/${USER}/Bureau/raspbian_20120924.img.gz
+
+
+
+=== RASPBMC ===
+
+http://www.raspbmc.com/download/
+
+
+==== fix cliperting ====
+http://forum.stmlabs.com/showthread.php?tid=1269
+Hi All
+
+I found the solution for 2. ( Videos pauses every few seconds: ), the screen flicker making me very nervous thing .... ( black screen then video comes back and black screen again )
+
+It seems like that the raspb is trying to sync the depth of the resolution from your TV, i.e on bootup the raspb is switching the TV via HDMI to 1080p60 -> but ! changing this in xbmc does not effect to your TV, so someone is trying (kernel driver or hardware) to correct this everytime.
+
+I but my TV in 1080p24 mode, this is how i have done it
+
+First, stop xbmc
+
+Code:
+pi@raspbmc:~$ sudo initctl stop xbmc
+
+go and get fbset
+
+Code:
+pi@raspbmc:~$ sudo apt-get install fbset
+
+take a look to the current framebuffer settings
+
+Code:
+pi@raspbmc:~$ fbset
+
+mode "1920x1080"
+    geometry 1920 1080 1920 1080 16
+    timings 0 0 0 0 0 0 0
+    rgba 5/11,6/5,5/0,0/16
+endmode
+
+enable hardware acceleration, maybe to improve the xbmc GUI rendering and to enjoy some 3DDemos quite faster, dunno if the accel is needed but why not giving a try to learn something
+
+Code:
+fbset -accel true
+
+now take a look again
+
+Code:
+pi@raspbmc:~$ fbset
+
+mode "1920x1080"
+    geometry 1920 1080 1920 1080 16
+    timings 0 0 0 0 0 0 0
+    accel true
+    rgba 5/11,6/5,5/0,0/16
+endmode
+
+ok, let's get git and build-essential
+
+Code:
+pi@raspbmc:~$ sudo apt-get install git build-essential
+
+clone the raspb firmware, this takes a lot of space ! ~600mb
+
+Code:
+pi@raspbmc:~$ git clone git://github.com/raspberrypi/firmware.git
+
+now lets move some files where they should be
+
+Code:
+pi@raspbmc:~$ cd firmware/opt/vc
+pi@raspbmc:~/firmware/opt/vc$ sudo mv bin /opt/vc/
+pi@raspbmc:~/firmware/opt/vc$ sudo mv include /opt/vc/
+pi@raspbmc:~/firmware/opt/vc$ sudo mv sbin /opt/vc/
+pi@raspbmc:~/firmware/opt/vc$ sudo mv src /opt/vc/
+
+tell our TV to switch to 1080p24 but first have a look to the supported resolutions of your TV
+
+Code:
+pi@raspbmc:~/firmware/opt/vc$ cd /opt/vc/bin
+pi@raspbmc:/opt/vc/bin$ ./tvservice --modes=CEA
+Group CEA has 15 modes:
+           mode 1: 640x480 @ 60Hz, progressive
+           mode 2: 720x480 @ 60Hz, progressive
+           mode 3: 720x480 @ 60Hz, progressive
+           mode 4: 1280x720 @ 60Hz, progressive
+           mode 5: 1920x1080 @ 60Hz, interlaced
+  (native) mode 16: 1920x1080 @ 60Hz, progressive
+           mode 17: 720x576 @ 50Hz, progressive
+           mode 18: 720x576 @ 50Hz, progressive
+           mode 19: 1280x720 @ 50Hz, progressive
+           mode 20: 1920x1080 @ 50Hz, interlaced
+           mode 21: 720x576 @ 50Hz, interlaced
+  (native) mode 31: 1920x1080 @ 50Hz, progressive
+           mode 32: 1920x1080 @ 24Hz, progressive
+           mode 33: 1920x1080 @ 25Hz, progressive
+           mode 34: 1920x1080 @ 30Hz, progressive
+pi@raspbmc:/opt/vc/bin$
+
+ok mode 32 is the one for me what i was looking for
+
+Code:
+pi@raspbmc:/opt/vc/bin$ ./tvservice --explicit="CEA 32"
+Powering on HDMI with explicit settings (CEA mode 32)
+pi@raspbmc:/opt/vc/bin$
+
+let's check
+
+Code:
+pi@raspbmc:/opt/vc/bin$ ./tvservice -s
+state: HPD high|HDMI mode|HDCP off|composite off (0x12001a), 1920x1080 @ 24Hz, progressive
+pi@raspbmc:/opt/vc/bin$
+
+yeah done, start xbmc
+
+Code:
+pi@raspbmc:/opt/vc/bin$ sudo initctl start xbmc
+
+==== tv service ====
+ sudo ln -s /lib/ld-linux-armhf.so.3 /lib/ld-linux.so.3
+/etc/ld.so.conf.d# echo /opt/vc/lib >broadcomlib.conf

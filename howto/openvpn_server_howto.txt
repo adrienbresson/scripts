@@ -1,0 +1,86 @@
+How to configure en openvpn server
+
+Generate keys
+<pre>
+cd /etc/openvpn/
+mkdir easy-rsa
+cd easy-rsa
+cp -r /usr/share/doc/openvpn/examples/easy-rsa/2.0/* .
+vi vars
+. ./vars
+./clean-all
+./build-ca
+./build-key-server server
+./build-key clientVPN1
+./build-dh
+</pre>
+
+Server conf (cat /etc/openvpn/server.conf)
+<pre>
+port 1194 #Numéro du port utilisé
+proto udp #Protocole de communication
+dev tun #Type d'interface
+ca easy-rsa/keys/ca.crt #Emplacement du master CA
+cert easy-rsa/keys/server.crt #Emplacement du certificat du serveur
+key easy-rsa/keys/server.key #Emplacement de la clé du serveur
+dh easy-rsa/keys/dh1024.pem #Emplacement du fichier Diffie-Hellman
+server 10.8.0.0 255.255.255.0 #Quelle sera l'adresse du réseau virtuel créé par le VPN
+
+;cipher AES-128-CBC #Type d'encryptage des données
+;comp-lzo #Activation de la compression
+persist-key #Pour rendre la connexion persistante
+persist-tun #Fichier de log
+tun-mtu 1500
+tun-mtu-extra 32
+mssfix 1450
+
+push "redirect-gateway def1"
+push "dhcp-option DNS 208.67.222.222"
+push "dhcp-option DNS 208.67.220.220"
+
+;push "route 10.8.0.0 255.255.255.0" #Quelle est la route pour communiquer, ici le réseau 10.4.
+keepalive 10 120
+max-clients 3 #Nombre maximum de clients autorisés
+client-to-client #Allow clients to see eachother 
+;user nobody #Pas d'utilisateur et groupe particuliers pour l'utilisation du VPN
+;group nobody
+status openvpn-status.log
+log /var/log/openvpn.log
+verb 1 #niveau de verbosit
+
+route 192.168.1.0 255.255.255.0
+client-config-dir ccd
+</pre>
+
+Client conf (cat /etc/openvpn/client.conf)
+<pre>
+#pour signaler que c'est un client !
+client
+#type d'interface
+dev tun
+#protocole de communication
+proto udp
+#adresse ip publique du réseau dans lequel le serveur est installé + port identique au serveur
+remote 5.135.185.223 1194
+#tentative de connexion infinie
+resolv-retry infinite
+nobind
+#pour rendre la connexion persistante
+;persist-key
+;persist-tun
+#pour cacher les avertissements
+mute-replay-warnings
+#emplacement du master CA
+ca keys/ca.crt
+#emplacement du certificat client
+cert keys/clientVPN1.crt
+#emplacement de la clé privée du client
+key keys/clientVPN1.key
+#type d'encryptage des données
+;cipher AES-128-CBC
+#activation de la compression
+;comp-lzo
+#niveau de verbosité
+verb 5
+log /var/log/openvpn.log
+</pre>
