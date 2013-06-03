@@ -10,6 +10,8 @@
 #  http://www.elao.com/blog/linux/install-stats-d-graphite-on-a-debian-server-to-monitor-a-symfony2-application-12.html
 #  http://geek.michaelgrace.org/2011/09/how-to-install-graphite-on-ubuntu/
 #  https://gist.github.com/jbraeuer/1715985
+#  https://github.com/jordansissel/fpm/wiki/PackageMakeInstall/
+#  https://github.com/jordansissel/fpm/wiki
 
 WORKING_DIR='/tmp/build'
 
