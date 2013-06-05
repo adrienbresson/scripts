@@ -10,8 +10,9 @@
 command='#!/bin/sh\nstartservice run_rc_shutdown\n/sbin/reboot'
 restartScript='/tmp/restart_router.sh'
 cronJob="0 5 * * * root ${restartScript} > /dev/null 2>&1"
+cronD='/tmp/cron.d/restartrouter'
 
 echo -e "${command}" > ${restartScript}
 chmod a+x ${restartScript}
-echo "${cronJob}" > ${restartScript}
+echo "${cronJob}" > ${cronD}
 
