@@ -1,0 +1,10 @@
+## Mysql spread sheet ##
+
+=== SET SESSION TIME ZONE ===
+SELECT @@global.time_zone, @@session.time_zone;
+SET time_zone = "+00:00";
+SELECT 
+   FROM_UNIXTIME(user_last_connected)
+FROM users 
+#WHERE  
+LIMIT 10;
