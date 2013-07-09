@@ -33,9 +33,12 @@ if($retrived_json != false) {
 foreach($animes as $anime => $datas) {
     $queued_episodes[$anime] = get_anime_list($anime, $datas);
 }
-//var_dump($queued_episodes); 
-download_torrents($queued_episodes, $download_dir);
-write_downloaded_torrents_to_file($queued_episodes, $json_file);
+$test_empty = array_filter($queued_episodes);
+if(!empty($test_empty)) {
+    //var_dump($queued_episodes);
+    download_torrents($queued_episodes, $download_dir);
+    write_downloaded_torrents_to_file($queued_episodes, $json_file);
+}
 
 function simple_curl($_feed){
     $_ch_xml = curl_init();
