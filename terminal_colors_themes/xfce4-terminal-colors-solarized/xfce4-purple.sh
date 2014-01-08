@@ -3,8 +3,8 @@
 MYUSER=${USER}
 SERVER=${1}
 SOLARIZED="${HOME}/GitHub/adrien.bresson/scripts/terminal_colors_themes/xfce4-terminal-colors-solarized"
-COLOR='grey'
-ALTERNATIVE_TITLE='intranet'
+COLOR='purple'
+ALTERNATIVE_TITLE='LAN'
 
 if [[ -n ${SERVER} ]];then
    title=$(echo ${SERVER} | tr '[:lower:]' '[:upper:]')
