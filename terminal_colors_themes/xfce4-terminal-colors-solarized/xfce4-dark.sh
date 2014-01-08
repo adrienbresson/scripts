@@ -17,6 +17,6 @@ if [[ -n ${SERVER} ]];then
    title=$(echo ${SERVER} | tr '[:lower:]' '[:upper:]')
    XDG_CONFIG_HOME=$SOLARIZED/$COLOR/ xfce4-terminal --disable-server --hide-menubar --title=${title} -e "ssh ${MYUSER}@${SERVER}"
 else
-   XDG_CONFIG_HOME=$SOLARIZED/$COLOR/ xfce4-terminal --disable-server --hide-menubar --title=${ALTERNATIVE_TITLE}
+   XDG_CONFIG_HOME=$SOLARIZED/$COLOR/ xfce4-terminal --disable-server --hide-menubar --title=${ALTERNATIVE_TILE}
 fi
 
