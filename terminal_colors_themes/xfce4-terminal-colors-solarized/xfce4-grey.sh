@@ -1,7 +1,12 @@
 #!/bin/bash
 
-MYUSER=${USER}
-SERVER=${1}
+if [[ ${1} =~ .+@.+ ]]; then
+    MYUSER=$(echo "${1}" |awk -F'@' '{print $1}')
+    SERVER=$(echo "${1}" |awk -F'@' '{print $2}')
+else
+    MYUSER=${USER}
+    SERVER=${1}
+fi
 SOLARIZED="${HOME}/GitHub/adrien.bresson/scripts/terminal_colors_themes/xfce4-terminal-colors-solarized"
 COLOR='grey'
 ALTERNATIVE_TITLE='intranet'
