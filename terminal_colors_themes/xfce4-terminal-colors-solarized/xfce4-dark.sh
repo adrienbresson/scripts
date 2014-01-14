@@ -1,8 +1,13 @@
 #!/bin/bash
 
-MYUSER=${USER}
-SERVER=${1}
-#TITLE=${2}
+if [[ ${1} =~ .+@.+ ]]; then
+    MYUSER=$(echo "${1}" |awk -F'@' '{print $1}')
+    SERVER=$(echo "${1}" |awk -F'@' '{print $2}')
+else
+    MYUSER=${USER}
+    SERVER=${1}
+fi
+#TITLE=${3}
 SOLARIZED="${HOME}/GitHub/adrien.bresson/scripts/terminal_colors_themes/xfce4-terminal-colors-solarized"
 COLOR='dark'
 ALTERNATIVE_TILE='SERVER'
