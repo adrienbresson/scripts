@@ -1,8 +1,8 @@
 [Configuration]
 ColorForeground=#404040404040
-ColorBackground=#cececececece
-ColorCursor=#a3d6a3d6a3d6
-ColorSelection=#e3d6e3d6e3d6
+ColorBackground=#ec89ea2bea2b
+ColorCursor=#ca52ca52ca52
+ColorSelection=#884288428842
 ColorPalette2=#66660a3d0a3d
 ColorPalette3=#000066661999
 ColorPalette4=#4ecf2e2e6666
@@ -12,8 +12,7 @@ ColorPalette7=#000080008000
 ColorPalette8=#35357878b3b3
 ColorPalette9=#999999999999
 ColorPalette10=#80000ccd0ccd
-ColorPalette11=#0000a6662999  
-ColorPalette11=#478903  
+ColorPalette11=#478903
 ColorPalette12=#9d9d5c5ccccc
 ColorPalette13=#262656568080
 ColorPalette14=#cccc1e6dcccc
@@ -40,4 +39,7 @@ MiscHighlightUrls=TRUE
 TabActivityColor=#262656568080
 ColorSelectionUseDefault=FALSE
 AccelSetTitle=F2
+MiscToolbarDefault=FALSE
+MiscScrollAlternateScreen=TRUE
+ScrollingLines=1000000
 

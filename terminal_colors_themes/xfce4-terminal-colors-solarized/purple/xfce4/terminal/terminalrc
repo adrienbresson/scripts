@@ -25,4 +25,6 @@ ColorSelectionUseDefault=FALSE
 AccelSetTitle=F2
 MiscToolbarDefault=FALSE
 MiscScrollAlternateScreen=TRUE
+ColorSelection=#7222795eef02
+ScrollingLines=100000
 

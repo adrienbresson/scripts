@@ -1,0 +1,24 @@
+--- quicktile.py_20140430	2014-04-30 10:01:07.447413700 +0200
++++ quicktile.py	2014-04-30 10:06:27.683414929 +0200
+@@ -654,6 +654,10 @@
+         @todo 1.0.0: Look for a way to accomplish this with a cleaner method
+             signature. This is getting a little hairy. (API-breaking change)
+         """
++     
++        # Adrien
++        bashCommand = "xdotool getactivewindow > /tmp/active_window_id.txt"
++        os.system(bashCommand)
+ 
+         # We need to ensure that ignored values are still present for
+         # gravity calculations.
+@@ -701,6 +705,10 @@
+             for mt in maxed:
+                 getattr(win, 'maximize' + mt)()
+ 
++        # Adrien
++        bashCommand = "/home/abresson/GitHub/adrien.bresson/scripts/py_pointer/pointer.sh $(cat /tmp/active_window_id.txt)"
++        os.system(bashCommand)
++
+ class KeyBinder(object):
+     """A convenience class for wrapping C{XGrabKey}."""
+ 
