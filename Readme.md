@@ -6,8 +6,7 @@
 
 ## Test
 
------------------
-| HEAD1 | HEAD2 |
------------------
-| C1    | C2    |
------------------
+First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
