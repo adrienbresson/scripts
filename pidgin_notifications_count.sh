@@ -7,8 +7,9 @@ PROCESS_NAME='pidgin'
 XPROPERTY='_PIDGIN_UNSEEN_COUNT'
 
 pid=$(ps aux |grep -E "${PROCESS_NAME}\$" |awk '{print $2}')
+[[ -z $pid ]] && echo "!pid" && exit 1
 winids=$(wmctrl -l -p |grep " ${pid} " |awk '{print $1}')
-
+[[ -z $winids ]] && echo "!wid" && exit 1
 for winid in $winids; do
    unread_messages=$(xprop -id ${winid} |grep "${XPROPERTY}")
    if [[ -n ${unread_messages} ]]; then
